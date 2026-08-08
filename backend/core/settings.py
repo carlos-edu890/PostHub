@@ -41,16 +41,12 @@ INSTALLED_APPS = [
     # Third-party apps
     'rest_framework',
     'rest_framework.authtoken',
+    'drf_yasg',
 
     # Local apps
     'users',
     'posts',
     'interactions',
-
-    # Others
-    'drf_yasg',
-    'rest_framework_swagger',
-    'django_filters',
 ]
 
 AUTH_USER_MODEL = 'users.User'
@@ -62,9 +58,6 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ],
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend'
     ],
 }
 
