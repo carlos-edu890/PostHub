@@ -1,7 +1,9 @@
+import uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class User(AbstractUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     avatar = models.URLField(max_length=500, blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
@@ -9,4 +11,5 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
 
