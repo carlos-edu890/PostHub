@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
-import { Mail, Send, CheckCircle, MessageSquare } from 'lucide-react';
+import { Mail, Send, CheckCircle, MessageSquare, AlertCircle } from 'lucide-react';
 
 const Contact = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim() || !message.trim()) return;
+    if (!name.trim() || !email.trim() || !message.trim()) {
+      setError('Preencha seu nome, e-mail e mensagem para enviar o contato.');
+      return;
+    }
+
+    setError('');
     setSent(true);
     setName('');
     setEmail('');
@@ -35,6 +41,13 @@ const Contact = () => {
         <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center gap-3 text-emerald-400 text-sm">
           <CheckCircle className="w-5 h-5 shrink-0" />
           <span>Mensagem enviada com sucesso! Agradecemos o seu contato.</span>
+        </div>
+      )}
+
+      {error && (
+        <div className="p-4 bg-rose-500/10 border border-rose-500/20 rounded-2xl flex items-center gap-3 text-rose-400 text-sm">
+          <AlertCircle className="w-5 h-5 shrink-0" />
+          <span>{error}</span>
         </div>
       )}
 

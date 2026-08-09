@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import postService from '../services/postService';
 import interactionService from '../services/interactionService';
+import ErrorState from '../components/ErrorState';
 import {
   ThumbsUp,
   ThumbsDown,
@@ -156,14 +157,14 @@ const PostDetail = () => {
 
   if (error || !post) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-12 text-center space-y-4">
-        <p className="text-rose-400 font-medium">{error || 'Post não encontrado.'}</p>
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 text-zinc-200 hover:text-white rounded-xl"
-        >
-          <ArrowLeft className="w-4 h-4" /> Voltar para a Página Inicial
-        </Link>
+      <div className="mx-auto max-w-4xl px-4 py-12">
+        <ErrorState
+          title={error ? 'Não foi possível carregar este post' : 'Post não encontrado'}
+          message={error || 'O conteúdo solicitado não está disponível no momento.'}
+          onRetry={() => fetchPostDetails()}
+          linkTo="/"
+          linkLabel="Voltar para a página inicial"
+        />
       </div>
     );
   }

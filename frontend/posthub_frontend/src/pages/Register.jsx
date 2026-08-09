@@ -46,6 +46,8 @@ const Register = () => {
       const msg =
         err.response?.data?.username?.[0] ||
         err.response?.data?.email?.[0] ||
+        err.response?.data?.password?.[0] ||
+        err.response?.data?.non_field_errors?.[0] ||
         err.response?.data?.detail ||
         'Não foi possível realizar o cadastro. Tente outro nome de usuário ou e-mail.';
       setError(msg);

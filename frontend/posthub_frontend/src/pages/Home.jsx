@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import postService from '../services/postService';
 import PostCard from '../components/PostCard';
+import ErrorState from '../components/ErrorState';
 import {
   Flame,
   PenSquare,
@@ -21,6 +22,7 @@ const Home = () => {
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState('');
 
   const [myTopPost, setMyTopPost] = useState(null);
   const [loadingMyTop, setLoadingMyTop] = useState(false);
@@ -32,6 +34,7 @@ const Home = () => {
         setLoadingMore(true);
       } else {
         setLoading(true);
+        setError('');
       }
 
       const data = await postService.getTop24hPosts(pageNumber);
@@ -45,8 +48,10 @@ const Home = () => {
 
       setHasMore(Boolean(data.next));
     } catch {
-      // Tratamento silencioso de erro ou lista vazia
-      if (!isAppend) setPosts([]);
+      if (!isAppend) {
+        setPosts([]);
+        setError('Não foi possível carregar o feed no momento. Tente novamente em instantes.');
+      }
     } finally {
       setLoading(false);
       setLoadingMore(false);
@@ -106,7 +111,13 @@ const Home = () => {
           </div>
 
           {/* Lista de Posts / Estado de Carregamento / Estado Vazio */}
-          {loading ? (
+          {error ? (
+            <ErrorState
+              title="Não foi possível carregar o feed"
+              message={error}
+              onRetry={() => fetchTopPosts(1, false)}
+            />
+          ) : loading ? (
             <div className="space-y-4">
               {[1, 2, 3].map((n) => (
                 <div

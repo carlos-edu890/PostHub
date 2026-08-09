@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import postService from '../services/postService';
 import PostCard from '../components/PostCard';
+import ErrorState from '../components/ErrorState';
 import { Search as SearchIcon, Inbox, ArrowRight } from 'lucide-react';
 
 const Search = () => {
@@ -14,12 +15,14 @@ const Search = () => {
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState('');
 
   // Executa a busca de posts
   const executeSearch = async (query, pageNum = 1, isAppend = false) => {
     if (!query.trim()) {
       setPosts([]);
       setHasMore(false);
+      setError('');
       return;
     }
 
@@ -28,6 +31,7 @@ const Search = () => {
         setLoadingMore(true);
       } else {
         setLoading(true);
+        setError('');
       }
 
       const data = await postService.searchPosts(query.trim(), pageNum);
@@ -41,7 +45,10 @@ const Search = () => {
 
       setHasMore(Boolean(data.next));
     } catch {
-      if (!isAppend) setPosts([]);
+      if (!isAppend) {
+        setPosts([]);
+        setError('Não foi possível concluir a busca. Tente novamente em instantes.');
+      }
     } finally {
       setLoading(false);
       setLoadingMore(false);
@@ -106,7 +113,13 @@ const Search = () => {
           </div>
         )}
 
-        {loading ? (
+        {error ? (
+          <ErrorState
+            title="Não foi possível realizar a busca"
+            message={error}
+            onRetry={() => executeSearch(queryParam, 1, false)}
+          />
+        ) : loading ? (
           <div className="space-y-4">
             {[1, 2, 3].map((n) => (
               <div

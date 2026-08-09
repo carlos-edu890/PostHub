@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import postService from '../services/postService';
 import PostCard from '../components/PostCard';
 import ConfirmModal from '../components/ConfirmModal';
+import ErrorState from '../components/ErrorState';
 import {
   FileText,
   PenSquare,
@@ -30,6 +31,7 @@ const MyPosts = () => {
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState('');
 
   // Estado para exclusão via ConfirmModal
   const [postToDelete, setPostToDelete] = useState(null);
@@ -41,6 +43,7 @@ const MyPosts = () => {
         setLoadingMore(true);
       } else {
         setLoading(true);
+        setError('');
       }
 
       const data = await postService.getMyPosts(sortOrder, pageNum);
@@ -54,7 +57,10 @@ const MyPosts = () => {
 
       setHasMore(Boolean(data.next));
     } catch {
-      if (!isAppend) setPosts([]);
+      if (!isAppend) {
+        setPosts([]);
+        setError('Não foi possível carregar os seus posts. Tente novamente em instantes.');
+      }
     } finally {
       setLoading(false);
       setLoadingMore(false);
@@ -141,7 +147,13 @@ const MyPosts = () => {
       </div>
 
       {/* Lista de Posts */}
-      {loading ? (
+      {error ? (
+        <ErrorState
+          title="Não foi possível carregar seus posts"
+          message={error}
+          onRetry={() => fetchMyPosts(ordering, 1, false)}
+        />
+      ) : loading ? (
         <div className="space-y-4">
           {[1, 2, 3].map((n) => (
             <div

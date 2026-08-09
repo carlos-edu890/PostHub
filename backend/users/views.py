@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework import status, permissions
+from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
@@ -10,9 +11,14 @@ User = get_user_model()
 
 class RegisterView(APIView):
     permission_classes = [permissions.AllowAny]
+    authentication_classes = []
+    parser_classes = [JSONParser]
 
     def post(self, request):
         serializer = UserRegisterSerializer(data=request.data)
+        print(serializer.is_valid())
+        print(serializer.errors)
+        print(request.data)
         if serializer.is_valid():
             user = serializer.save()
             token, _ = Token.objects.get_or_create(user=user)
@@ -25,6 +31,8 @@ class RegisterView(APIView):
 
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
+    authentication_classes = []
+    parser_classes = [JSONParser]
 
     def post(self, request):
         username_or_email = request.data.get('email') or request.data.get('username')
