@@ -4,6 +4,8 @@ PostHub é uma plataforma de publicação e compartilhamento de conteúdo inspir
 
 O projeto permite que usuários se cadastrem, façam login, criem posts, busquem conteúdo, comentem e interajam com publicações.
 
+![Demonstração do PostHub](assets/imagem_demonstracao.png)
+
 ## Visão geral
 
 Este repositório contém dois módulos principais:
